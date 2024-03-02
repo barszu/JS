@@ -1,16 +1,12 @@
-@keyframes opacity-change {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+@keyframes spinner-keyframes {
+  to { transform: rotate(360deg); }
 }
 
-.my-animation {
-  opacity: 1;
+.spinner {
+  animation: spinner-border 3s linear infinite;
+  animation-play-state: paused;
 }
 
-.my-animation:hover {
-  animation: opacity-change 1s ease-in-out;
+.spinner:hover {
+  animation-play-state: running;
 }
