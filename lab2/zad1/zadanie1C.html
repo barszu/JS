@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Plik 'zadanie1C.html'</title>
+</head>
+<body>
+<form oninput="wynik.value = policz(pole_tekstowe.value , pole_liczbowe.value)">
+  <input id="pole_tekstowe" type="text" placeholder="Wprowadź tekst">
+  +
+  <input id="pole_liczbowe" type="number" placeholder="Wprowadź liczbę">
+  =
+  <output name="wynik" for="pole_tekstowe pole_liczbowe">Tu pojawi się wynik obliczeń</output>
+  <br>
+  <input type="button" value="Wypisz" onclick="funkcja_zwrotna()">
+</form>
+<script>
+  // window.prompt("Tekst1","Tekst2"); // okno z polem do wpisania , displayed , default_displayed_value
+  function policz(value1, value2){
+    value1 = parseInt(value1) ? parseInt(value1) : 0
+    value2 = parseInt(value2) ? parseInt(value2) : 0
+    return value1 + value2
+  }
+
+  function czteroktotne() {
+    for (let i = 0; i < 4; i++) {
+      const value = window.prompt("Podaj wartość")
+      console.log(value ,":", typeof value)
+    }
+  }
+  // czteroktotne()
+
+  function funkcja_zwrotna() {
+    const value1 = document.forms[0].elements['pole_tekstowe'].value
+    const value2 = document.forms[0].elements['pole_liczbowe'].value
+    console.log("wczytanaWartośćZPolaTekstowego:" , value1)
+    console.log("wczytanaWartośćZPolaNumerycznego:" , value2)
+  }
+
+</script>
+</body>
+</html>
