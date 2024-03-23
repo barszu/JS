@@ -1,0 +1,104 @@
+<!-- @author Stanisław Polak <polak@agh.edu.pl> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Animation</title>
+  <script src="https://unpkg.com/react/umd/react.development.js" crossorigin ></script>
+  <script src="https://unpkg.com/react-dom/umd/react-dom.development.js" crossorigin ></script>
+  <script src="https://unpkg.com/babel-standalone/babel.min.js" ></script>
+</head>
+
+<body>
+<div id='root'></div>
+<form onsubmit="event.preventDefault();" >
+  <h2>requestAnimationFrame()</h2>
+  <label for="counter">Counter→</label>
+  <output id="counter" style="font-size: 4vh; color: red;">0</output>
+  <br>
+  <button id="start" onclick="startAnimation()">Start</button>
+  <button disabled id="stop" onclick="stopAnimation()">Stop</button>
+  <!-- ************************************************************** -->
+  <hr>
+  <h2>Time-consuming calculations in the main thread</h2>
+  <label for="result_main">Result:</label>
+  <output id="result_main">0</output>
+  <br>
+  <label for="iterations_main">Number of iterations:</label>
+  <input id="iterations_main" onfocus="document.forms[0].result_main.value ='0'" type="text" value="50">
+  <button
+    onclick="document.forms[0].result_main.value = calculatePrimes(document.forms[0].iterations_main.value || 50)">Run
+    calculations
+  </button>
+  <!-- ************************************************************** -->
+  <h2>Time-consuming calculations in a separate thread</h2>
+  <label for="result_worker">Result:</label>
+  <output id="result_worker">0</output>
+  <br>
+  <label for="iterations_worker">Number of iterations:</label>
+  <input id="iterations_worker" onfocus="document.forms[0].result_worker.value ='0'" type="text" value="50">
+  <button
+    onclick="calculatePrimesInBackground(document.forms[0].iterations_worker.value || 50)">Run
+    calculations
+  </button>
+</form>
+<script src="script.js"></script>
+<script src="worker.js"></script>
+<script type ="text/babel">
+  const outputStyle = {
+    fontSize: '4vh',
+    color: 'red',
+  };
+
+  const boxStyle = {
+    border: '1px solid black',
+    padding: '10px',
+    margin: '10px',
+    backgroundColor: 'lightgray',
+  };
+
+  const Counter = ({initial , delay}) => {
+    const [count, setCount] = React.useState(initial);
+    const [isRunning, setIsRunning] = React.useState(false);
+
+    React.useEffect(() => {
+      let timer;
+      if (isRunning) {
+        timer = setInterval(() => {
+          setCount((prevCount) => prevCount + 1);
+        }, delay);
+      } else {clearInterval(timer);}
+      return () => {clearInterval(timer);};
+    }, [isRunning]);
+
+    const handleStart = () => {setIsRunning(true);};
+    const handleStop = () => {setIsRunning(false);};
+
+    return (
+      <div style={boxStyle}>
+        <label htmlFor="counter">Counter→</label>
+        <output id="counter" style={outputStyle}>{count}</output>
+        <br />
+        <div>
+          <button onClick={handleStart} disabled={isRunning}>Start</button>
+          <button onClick={handleStop} disabled={!isRunning}>Stop</button>
+        </div>
+      </div>
+    );
+  };
+  const container = document.getElementById("root");
+  const root = ReactDOM.createRoot(container);
+  const App = () => (
+    <div>
+      <Counter initial={10} delay={1000}/>
+      <Counter initial={0} delay={100} />
+    </div>
+  );
+  root.render(<App />);
+</script>
+</body>
+
+</html>
