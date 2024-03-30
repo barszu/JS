@@ -1,25 +1,15 @@
 import ReactDOM from 'react-dom/client'
 import {useState , useEffect} from "react";
 import React from "react";
-import { sellVehicle , getAllVehicles } from "../database.js";
+import { useShopContext } from "./ShopContext.jsx";
+import { ShopProvider } from "./ShopContext.jsx";
 
-// const [needRender, setNeedRender] = useState(true);
 const clientId = 1;
 
 const Vehicle = ({ vehicle }) => {
-
-  const [canBeRendred, setCanBeRender] = useState(true);
-
-  const handleSell = async (clientId, vehicleId) => {
-    await sellVehicle(clientId, vehicleId);
-    setCanBeRender(false);
-  };
-  // console.log(vehicle.image);
-  if (!canBeRendred) {
-    return null;
-  }
+  const { handleSell } = useShopContext();
   return (
-    <div className="card col-md-3 m-3" style={{ width: "18rem" }}>
+    <div className="card col-md-3 m-4" style={{ width: "18rem" }}>
       <img src={vehicle.image} className="card-img-top rounded mx-auto d-block" alt="Nie udalo sie wczytac zdjecia..." />
       <div className="card-body">
         <h5 className="card-title">{vehicle.name}</h5>
@@ -37,27 +27,14 @@ const Vehicle = ({ vehicle }) => {
 };
 
 const ProductsList = () => {
-  const [vehiclesFromQuery, setVehiclesFromQuery] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await getAllVehicles()
-        .then((vehicles) => {
-          // console.log('fetched' , vehicles)
-          setVehiclesFromQuery(vehicles);
-        });
-    };
-
-    fetchData();
-  }, []);
-
+  const { vehiclesFromQuery } = useShopContext();
 
   if (vehiclesFromQuery == null) {
     return <p>Loading...</p>;
   }
   if (vehiclesFromQuery.length === 0) {
     return (
-      <div style={{backgroundColor: "gray"}}>
+      <div style={{backgroundColor: "gray" , height: '200px'}}>
         <p>Nie ma pojazdow w sklepie!</p>
       </div>
 
@@ -83,7 +60,9 @@ const root = ReactDOM.createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <ProductsList />
+    <ShopProvider>
+      <ProductsList />
+    </ShopProvider>
   </React.StrictMode>
 );
 
