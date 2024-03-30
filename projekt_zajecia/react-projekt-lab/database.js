@@ -10,10 +10,12 @@ dbRequest.onerror = function (event) {
 dbRequest.onupgradeneeded = function (event) {
   const db = event.target.result;
   const vehicleStore = db.createObjectStore("Vehicles", { keyPath: "id", autoIncrement: true });
-  vehicleStore.createIndex( "vehicle", ["name", "description", "price"],  { unique: false });
+  vehicleStore.createIndex( "vehicle", ["name", "description", "price" , "image"],  { unique: false });
 
   const customerStore = db.createObjectStore("Customers", { keyPath: "id", autoIncrement: true });
   customerStore.createIndex("user", ["name", "surname", "email","bought_cars"], { unique: false });
+
+  create_dummy_data();
 };
 
 dbRequest.onsuccess = function (event) {
@@ -177,6 +179,16 @@ function sellVehicle(clientId , vehicleId) {
   db_openRequest.onerror = function(event) {
     console.error("Error while opening database:", event.target.errorCode);
   };
+}
+
+
+const create_dummy_data = () => {
+  addVehicle({ name: "fiat tipo", price: 100000, description: "silnik benzynowy 999cm^3, skrzynia biegów manualna", image: "https://www.fiat.pl/content/dam/fiat/com/my23/tipo/colorizer/tipo-hb/paprika-orange/Tipo-HB-colorizer-Paprika-Orange-desktop-680x430.png" });
+  addVehicle({ name: "fiat 500", price: 200000, description: "silnik elektryczny, zasięg 400km", image: "https://www.fiat.pl/content/dam/fiat/com/my23/500-500c/white-label/500/500-PDF-figurino-mobile-288x225.png" });
+  addVehicle({ name: "Przyczepa samochdowa bez plandeki", price: 3000, description: "super przyczepa", image: "https://etnacar.pl/media/images/product/przyczepy_oraz_lawety/thumbs/6_1_przyczepa_dwuosiowa_bez_plandeki_z_hamulcem-960x640.jpg" });
+  addVehicle({ name: "Przyczepa samochodowa z plandeka", price: 5000, description: "super przyczepa z plandeka", image: "https://a.allegroimg.com/original/11e5c3/8c9e205a43b8b9af888e47e1be26/Przyczepka-Samochodowa-Z-PLANDEKA-I-STELAZEM-RSH-Typ-burtowa-plandeka" });
+
+  addCustomer({ name: "Jan", surname: "Kowalski", email: "jankowal@wpp.pl" });
 }
 
 export { addVehicle, getAllVehicles, addCustomer, getAllCustomers, sellVehicle };
