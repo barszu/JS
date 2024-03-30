@@ -7,11 +7,17 @@ import { sellVehicle , getAllVehicles } from "../database.js";
 const clientId = 1;
 
 const Vehicle = ({ vehicle }) => {
+
+  const [canBeRendred, setCanBeRender] = useState(true);
+
   const handleSell = async (clientId, vehicleId) => {
-    // await sellVehicle(clientId, vehicleId);
-    // setNeedRender(true);
+    await sellVehicle(clientId, vehicleId);
+    setCanBeRender(false);
   };
   // console.log(vehicle.image);
+  if (!canBeRendred) {
+    return null;
+  }
   return (
     <div className="card col-md-3 m-3" style={{ width: "18rem" }}>
       <img src={vehicle.image} className="card-img-top rounded mx-auto d-block" alt="Nie udalo sie wczytac zdjecia..." />
@@ -31,7 +37,7 @@ const Vehicle = ({ vehicle }) => {
 };
 
 const ProductsList = () => {
-  const [vehiclesFromQuery, setVehiclesFromQuery] = useState([]);
+  const [vehiclesFromQuery, setVehiclesFromQuery] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,13 +52,20 @@ const ProductsList = () => {
   }, []);
 
 
-  if (vehiclesFromQuery.length === 0) {
+  if (vehiclesFromQuery == null) {
     return <p>Loading...</p>;
   }
-  else{
+  if (vehiclesFromQuery.length === 0) {
+    return (
+      <div style={{backgroundColor: "gray"}}>
+        <p>Nie ma pojazdow w sklepie!</p>
+      </div>
+
+    )
+  } else {
     // console.log('ready' , vehiclesFromQuery);
     return (
-      <div class="row d-flex flex-row">
+      <div className="row d-flex flex-row">
         {vehiclesFromQuery.map((vehicle) => (
           <Vehicle key={vehicle.id} vehicle={vehicle} />
         ))}
