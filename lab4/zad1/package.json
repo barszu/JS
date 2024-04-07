@@ -1,0 +1,16 @@
+{
+  "name": "zad1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./src/main.js",
+    "script1": "node ./src/console_script1.js",
+    "cnt_asyns": "node ./src/run_counter.js --async",
+    "cnt_sync": "node ./src/run_counter.js --sync",
+    "exec": "node ./src/run_counter.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
