@@ -6,8 +6,11 @@
 // const { URL } = require('node:url');
 import http from 'node:http';
 import { URL } from 'node:url';
+import qs from 'node:querystring'
 
 import fs from 'fs';
+
+const guestbookPath = 'guestbook.txt'
 
 
 /**
@@ -95,20 +98,65 @@ function requestListener(request, response) {
       break;
 
     case 'GET /':
-      fs.readFile('./index.html', 'utf8', (err, data) => {
+      fs.readFile(guestbookPath, 'utf8', (err, data) => {
         if (err) {
           response.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
-          response.write('Error 500: Internal Server Error');
-          response.end();
-        } else {
-          response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-          response.write(data);
-          response.end();
+          response.end('Error 500: Internal Server Error');
+          return;
         }
+        const entries = data.trim().split('\n');
+        const guestbookEntries = entries.map((entry, index) => `<li>${entry}</li>`).join('');
+        const html = `
+        <!DOCTYPE html>
+        <html lang="pl">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Księga gości</title>
+          </head>
+          <body>
+            <h1>Księga gości:</h1>
+            <ul style="list-style-type: none;">${guestbookEntries}</ul>
+            <hr>
+            <h2>Dodaj wpis:</h2>
+            <form method="POST" action="/add">
+              <label for="name">Imię i nazwisko:</label><br>
+              <input type="text" id="name" name="name" placeholder="Jan Kowalski" style="border-radius: 5px; padding: 10px; border: 2px solid #ccc; font-size: 16px; width: 200px;"><br>
+              <label for="content">Treść wpisu:</label><br>
+              <textarea id="content" name="content" placeholder="super strona" style="border-radius: 5px; padding: 10px; border: 2px solid #ccc; font-size: 16px; width: 200px;"></textarea><br>
+              <input type="submit" value="Dodaj wpis" style="border-radius: 5px; padding: 10px; border: 2px solid #ccc; font-size: 16px;">
+            </form>
+
+          </body>
+        </html>
+      `;
+        response.writeHead(200, { 'Content-Type': 'text/html' });
+        response.end(html);
       });
       break;
 
-    case 'GET /submit':
+    case 'POST /add':
+      let body = '';
+      request.on('data', chunk => {body += chunk.toString();});
+      request.on('end', () => {
+        const formData = qs.parse(body);
+        const entry = `<div><h2>${formData.name}</h2><p>${formData.content}</p></div>`;
+
+        // Dodanie nowego wpisu do księgi gości
+        fs.appendFile(guestbookPath, `${entry}\n`, 'utf8', (err) => {
+          if (err) {
+            response.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+            response.write('Error 500: Internal Server Error');
+            response.end();
+          }
+          else {
+            // Przekierowanie na stronę główną po dodaniu wpisu
+            response.writeHead(302, { 'Location': '/' });
+            response.end();
+          }
+        });
+      });
+      break;
 
 
     /*
@@ -120,6 +168,7 @@ function requestListener(request, response) {
       response.writeHead(501, { 'Content-Type': 'text/plain; charset=utf-8' });
       response.write('Error 501: Not implemented');
       response.end();
+      break;
   }
 }
 
