@@ -2,8 +2,8 @@
  * @author Stanisław Polak <polak@agh.edu.pl>
  */
 
-import express from 'express';
-import morgan from 'morgan';
+import express from "express";
+import morgan from "morgan";
 
 const app = express();
 
@@ -11,9 +11,10 @@ const app = express();
 /* Determining the contents of the middleware stack *
 /* ************************************************ */
 
-app.use(morgan('dev')); // Place an HTTP request recorder on the stack — each request will be logged in the console in 'dev' format
+app.use(morgan("dev")); // Place an HTTP request recorder on the stack — each request will be logged in the console in 'dev' format
 
-app.use('/static', express.static('public'))
+//dodanie bloku plikow statycznych
+app.use("/static", express.static("public"));
 /* ******** */
 /* "Routes" */
 /* ******** */
@@ -21,7 +22,7 @@ app.use('/static', express.static('public'))
 /* ------------- */
 /* Route 'GET /' */
 /* ------------- */
-app.get('/', (request, response) => {
+app.get("/", (request, response) => {
   // Generating the form if the relative URL is '/', and the GET method was used to send data to the server'
   response.send(`
     <!DOCTYPE html>
@@ -41,7 +42,7 @@ app.get('/', (request, response) => {
                 <input type="submit">
                 <input type="reset">
              </form>
-             <image src="/static/grassland.png"></image>
+             <image src="static/images/grassland.png"></image>
           </main>
        </body>
     </html>    
@@ -51,11 +52,11 @@ app.get('/', (request, response) => {
 /* ------------------- */
 /* Route 'GET /submit' */
 /* ------------------- */
-app.get('/submit', (request, response) => {
+app.get("/submit", (request, response) => {
   // Processing the form content, if the relative URL is '/submit', and the GET method was used to send data to the server'
   /* ************************************************** */
   // Setting an answer header — we inform the browser that the returned data is plain text
-  response.set('Content-Type', 'text/plain')
+  response.set("Content-Type", "text/plain");
   /* ************************************************** */
   // Place given data (here: 'Hello <name>') in the body of the answer
   response.send(`Hello ${request.query.name}`); // Send a response to the browser
@@ -64,6 +65,6 @@ app.get('/submit', (request, response) => {
 /* ************************************************ */
 // The application is to listen on port number 8000
 app.listen(8000, () => {
-  console.log('The server was started on port 8000');
+  console.log("The server was started on port 8000");
   console.log('To stop the server, press "CTRL + C"');
 });

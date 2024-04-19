@@ -24,10 +24,10 @@ describe("GET /", () => {
   });
 });
 
-describe("GET /welcome/submit/", () => {
+describe("GET submit/", () => {
   it("responds with welcome", (done) => {
     server
-      .get("/welcome/submit")
+      .get("/submit")
       .query({ name: "róża" })
       .expect(200, "Hello róża")
       .end((err, res) => {
@@ -37,10 +37,10 @@ describe("GET /welcome/submit/", () => {
   });
 });
 
-describe("POST /welcome", () => {
+describe("POST /", () => {
   it("responds with welcome", (done) => {
     server
-      .post("/welcome")
+      .post("/")
       .type("form")
       .send({ name: "róża" })
       .expect(200, "Hello róża")

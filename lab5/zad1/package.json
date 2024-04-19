@@ -5,12 +5,20 @@
   "main": "app1.js",
   "type": "module",
   "scripts": {
-    "test": "npx jest",
-    "dev": "node --watch src/app1"
+    "test": "npm jest",
+    "dev1": "node --watch src/app1",
+    "dev2": "node --watch src/app2"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "supertest": "^6.3.4"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "jest": "^29.7.0",
+    "mongodb": "^6.5.0",
+    "morgan": "^1.10.0",
+    "pug": "^3.0.2"
   }
 }

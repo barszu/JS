@@ -1,7 +1,7 @@
 //- @author Stanisław Polak <polak@agh.edu.pl>
 
 doctype html
-html(lang='en')
+html(lang='pl')
     head
         meta(charset='utf-8')
         meta(name='viewport' content='width=device-width, initial-scale=1')
@@ -40,4 +40,18 @@ html(lang='en')
                             input(name='name')
                             br
                             input(type='submit')
-                            input(type='reset')np
+                            input(type='reset')
+            table
+            br
+            table
+                thead
+                    tr
+                        th Imię
+                        th Nazwisko
+                tbody
+                    each person in students
+                        tr
+                            td= person.fname
+                            td= person.lname
+
+        img(src='static/images/grassland.png', alt='zdjecie sie nie wczytalo')
