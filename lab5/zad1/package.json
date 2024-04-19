@@ -1,0 +1,16 @@
+{
+  "name": "zad1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app1.js",
+  "type": "module",
+  "scripts": {
+    "test": "npx jest",
+    "dev": "node --watch src/app1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "supertest": "^6.3.4"
+  }
+}
