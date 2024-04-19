@@ -1,0 +1,33 @@
+doctype html
+html(lang='pl')
+    head
+        meta(charset='utf-8')
+        meta(name='viewport' content='width=device-width, initial-scale=1')
+        title Wykaz studentow
+        style.
+            table {
+                width: 100%;
+            }
+            td {
+                border: 1px solid #000;
+                padding: 15px;
+                text-align: left;
+            }
+            th {
+                background-color: #04AA6D;
+                color: white;
+            }
+    body
+        main
+            table
+                thead
+                    tr
+                        th Imię
+                        th Nazwisko
+                        th Wydzial
+                tbody
+                    each person in students
+                        tr
+                            td= person.firstName
+                            td= person.lastName
+                            td= person.faculty
