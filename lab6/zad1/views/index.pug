@@ -19,201 +19,7 @@ html(lang='en')
                 background-color: #04AA6D;
                 color: white;
             }
-        script.
-          /**************************************************************************************/
-          /* Function that retrieves the content of one of the selected text fields of the form */
-          /**************************************************************************************/
-          function getName(http_method){
-            let name = '';
 
-            // TODO: Here put the code that, depending on the value of the 'http_method' variable — GET / POST — assigns the 'name' variable to the value of the 'name_GET' / 'name_POST' form field
-            if(http_method === 'GET')
-              name = document.getElementById('name_GET').value;
-            if(http_method === 'POST')
-              name = document.getElementById('name_POST').value;
-
-            return name;
-          }
-
-          /**************************************************************************************/
-          /* Function that performs (asynchronous) query to the web server using AJAX           */
-          /**************************************************************************************/
-          /* http_method ∈ ["GET", "POST"]                                                      */
-          /* response_type ∈ ["text", "json", "document"]                                       */
-          /* name - Contents of the form's text box - data that needs to be sent asynchronously */
-          /**************************************************************************************/
-          function requestAJAX(http_method, response_type, name, show_alert=false) {
-            //-----------------------------------------------
-            // Create an object representing the request to the web server — see https://developer.mozilla.org/docs/Web/API/XMLHttpRequest
-            //-----------------------------------------------
-            const xhr = new XMLHttpRequest();
-
-            //-----------------------
-            // Observers registration
-            //-----------------------
-
-            // If the request was successful
-            xhr.addEventListener("load", function (evt) {
-              if (xhr.status === 200) {
-                console.group('AJAX');
-                console.log(`HTTP method ⟶\t\t${http_method}\nResponse type ⟶\t${response_type}\nInput data ⟶\t\t${name}`);
-                console.log(xhr.response);
-                console.groupEnd();
-                if(show_alert) { //do wyswietlenia alertu
-                  // window.alert(xhr.response);
-                  let alertMessage;
-                  switch (response_type) {
-                    case 'json':
-                      alertMessage = JSON.stringify(xhr.response, null, 2);
-                      break;
-                    case 'document':
-                      alertMessage = new XMLSerializer().serializeToString(xhr.response);
-                      break;
-                    default:
-                      alertMessage = xhr.response;
-                  }
-                }
-
-                else {
-                  results.set(`ajax ${http_method} ${response_type}`, xhr.response);
-                  dispatchEvent(received);
-                }
-              }
-            });
-
-            // If the request was failed
-            xhr.addEventListener("error", function (evt) {
-              window.alert('There was a problem with this request.');
-            });
-
-            //--------------------------------------------------------------------------
-            // Configuration and execution of the (asynchronous) query to the web server
-            //--------------------------------------------------------------------------
-            xhr.responseType = response_type;  // Type of data received by the 'load' observer
-            xhr.withCredentials = true; // Do not modify or remove
-
-            //*********************************
-            // Specifying connection parameters
-            //*********************************
-            if(http_method === 'GET') {
-              xhr.open('GET', `http://localhost:8000/submit?name=${encodeURIComponent(name)}`, true); // TO BE MODIFIED
-              //funkcja ta koduje zamieniajac np spacje na %20
-            }
-            if(http_method === 'POST'){
-              xhr.open('POST', 'http://localhost:8000/submit', true);
-              xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-              //ustawiamy naglowek content type, zeby serwer wiedzial jaki typ danych otrzymuje (o ten jest standardowy)
-            }
-            //****************************************************************************************
-            // What is the acceptable data type - the server part should return data of the given type
-            // Default value: '*/*'
-            //****************************************************************************************
-            switch(response_type){
-              case 'json':
-                xhr.setRequestHeader('Accept', 'application/json');
-                break;
-              case 'document':
-                xhr.setRequestHeader('Accept', 'application/xml');
-                break;
-            }
-
-            //****************************
-            // Making an asynchronous call
-            //****************************
-            if(http_method === 'GET') {
-              xhr.send(null);
-            }
-            if(http_method === 'POST') {
-              // TO BE ADDED: you must specify the value of the 'Content-type' header — you must inform the server that the body content contains data of the "application/x-www-form-urlencoded" type
-              // xhr.send(null); // TO BE MODIFIED
-              xhr.send(`name=${encodeURIComponent(name)}`);
-            }
-          }
-
-          /**************************************************************************************/
-          /* Function that performs (asynchronous) query to the web server  usingFetch API      */
-          /**************************************************************************************/
-          /* http_method ∈ ["GET", "POST"]                                                      */
-          /* response_type ∈ ["text", "json", "xml"]                                            */
-          /* name - Contents of the form's text box - data that needs to be sent asynchronously */
-          /**************************************************************************************/
-          function requestFetchAPI(http_method, response_type, name, show_alert=false) {
-            let accept = '*/*';
-
-            switch(response_type){
-              case 'json':
-                accept = 'application/json';
-                break;
-              case 'xml':
-                accept = 'application/xml';
-                break;
-            }
-            //--------------------------------------------------------------------------
-            // Configuration and execution of the (asynchronous) query to the web server
-            //--------------------------------------------------------------------------
-            ((http_method) => {
-              if(http_method === 'GET')
-                return fetch(`http://localhost:8000/submit?name=${encodeURIComponent(name)}`, { // TO BE MODIFIED
-                  method: 'GET',
-                  credentials: "include", // Do not modify or remove
-                  headers: {
-                    //****************************************************************************************
-                    // What is the acceptable data type—the server part should return data of the given type
-                    //****************************************************************************************
-                    Accept: accept
-                  }
-                });
-              if(http_method === 'POST')
-                return fetch('http://localhost:8000/submit', {
-                  method: 'POST',
-                  credentials: "include", // Do not modify or remove
-                  // TO BE ADDED - you need to determine the content of the body
-                  body: `name=${encodeURIComponent(name)}`,
-                  headers: {
-                    // TO BE ADDED: you must specify the value of the 'Content-type' header — you must inform the server that the body content contains data of the "application/x-www-form-urlencoded" type
-                    'Content-type': 'application/x-www-form-urlencoded',
-                    //****************************************************************************************
-                    // What is the acceptable data type—the server part should return data of the given type
-                    //****************************************************************************************
-                    Accept: accept
-                  }
-                });
-
-            })(http_method) // a promise is returned
-              .then(function (response) { // if the promise is fulfilled
-                if (!response.ok)
-                  throw Error(response.statusText);
-
-                console.group('Fetch API');
-                console.log(`HTTP method ⟶\t\t${http_method}\nResponse type ⟶\t${response_type}\nInput data ⟶\t\t${name}`);
-                let result;
-
-                if (!response.headers.get('content-type')?.includes('application/json')) {
-                  // If the received data is plain text or an XML document
-                  result = response.text();
-                }
-                else {
-                  //If the received data is a JSON document
-                  result = response.json();
-                }
-                console.log(result);
-                console.groupEnd();
-                if(show_alert){
-                  // window.alert(result);
-                  response.text().then(function(text) {
-                    window.alert(text);
-                  });
-                }
-
-                else {
-                  results.set(`fetch ${http_method} ${response_type}`, result);
-                  dispatchEvent(received);
-                }
-              })
-              .catch(function (error) { // if the promise is rejected
-                window.alert(error);
-              });
-          }
         script(src="https://cdn.jsdelivr.net/npm/mocha/mocha.js")
         script(type="module").
           import { expect } from 'https://cdn.jsdelivr.net/npm/chai/chai.js'
@@ -259,6 +65,7 @@ html(lang='en')
                           td
                             each type in ["text", "json", "xml"]
                                 button(onclick=`console.clear() ; requestFetchAPI("${method}","${type}", getName('${method}'), true)`) #{type}
+        div(id="dataDisplay") // Nowy element div do wyświetlania danych
         h1 Unit tests
         button(onclick='window.location.reload();') Restart
         div(id="mocha")
@@ -347,3 +154,205 @@ html(lang='en')
           test_executed = true;
           }
           });
+        script.
+          function displayData(data) { //do wyswietlenia danych w div
+          const dataDisplay = document.getElementById('dataDisplay');
+          dataDisplay.textContent = data;
+          }
+
+          /**************************************************************************************/
+          /* Function that retrieves the content of one of the selected text fields of the form */
+          /**************************************************************************************/
+          function getName(http_method){
+          let name = '';
+
+          // TODO: Here put the code that, depending on the value of the 'http_method' variable — GET / POST — assigns the 'name' variable to the value of the 'name_GET' / 'name_POST' form field
+          if(http_method === 'GET')
+          name = document.getElementById('name_GET').value;
+          if(http_method === 'POST')
+          name = document.getElementById('name_POST').value;
+
+          return name;
+          }
+
+          /**************************************************************************************/
+          /* Function that performs (asynchronous) query to the web server using AJAX           */
+          /**************************************************************************************/
+          /* http_method ∈ ["GET", "POST"]                                                      */
+          /* response_type ∈ ["text", "json", "document"]                                       */
+          /* name - Contents of the form's text box - data that needs to be sent asynchronously */
+          /**************************************************************************************/
+          function requestAJAX(http_method, response_type, name, show_alert=false) {
+          //-----------------------------------------------
+          // Create an object representing the request to the web server — see https://developer.mozilla.org/docs/Web/API/XMLHttpRequest
+          //-----------------------------------------------
+          const xhr = new XMLHttpRequest();
+
+          //-----------------------
+          // Observers registration
+          //-----------------------
+
+          // If the request was successful
+          xhr.addEventListener("load", function (evt) {
+          if (xhr.status === 200) {
+          console.group('AJAX');
+          console.log(`HTTP method ⟶\t\t${http_method}\nResponse type ⟶\t${response_type}\nInput data ⟶\t\t${name}`);
+          console.log(xhr.response);
+          console.groupEnd();
+          if(show_alert) { //do wyswietlenia alertu
+          // window.alert(xhr.response);
+          let alertMessage;
+          switch (response_type) {
+          case 'json':
+          alertMessage = JSON.stringify(xhr.response, null, 2);
+          break;
+          case 'document':
+          alertMessage = new XMLSerializer().serializeToString(xhr.response);
+          break;
+          default:
+          alertMessage = xhr.response;
+          }
+          displayData(alertMessage);
+          }
+
+          else {
+          results.set(`ajax ${http_method} ${response_type}`, xhr.response);
+          dispatchEvent(received);
+          }
+          }
+          });
+
+          // If the request was failed
+          xhr.addEventListener("error", function (evt) {
+          window.alert('There was a problem with this request.');
+          });
+
+          //--------------------------------------------------------------------------
+          // Configuration and execution of the (asynchronous) query to the web server
+          //--------------------------------------------------------------------------
+          xhr.responseType = response_type;  // Type of data received by the 'load' observer
+          xhr.withCredentials = true; // Do not modify or remove
+
+          //*********************************
+          // Specifying connection parameters
+          //*********************************
+          if(http_method === 'GET') {
+          xhr.open('GET', `http://localhost:8000/submit?name=${encodeURIComponent(name)}`, true); // TO BE MODIFIED
+          //funkcja ta koduje zamieniajac np spacje na %20
+          }
+          if(http_method === 'POST'){
+          xhr.open('POST', 'http://localhost:8000/submit', true);
+          xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+          //ustawiamy naglowek content type, zeby serwer wiedzial jaki typ danych otrzymuje (o ten jest standardowy)
+          }
+          //****************************************************************************************
+          // What is the acceptable data type - the server part should return data of the given type
+          // Default value: '*/*'
+          //****************************************************************************************
+          switch(response_type){
+          case 'json':
+          xhr.setRequestHeader('Accept', 'application/json');
+          break;
+          case 'document':
+          xhr.setRequestHeader('Accept', 'application/xml');
+          break;
+          }
+
+          //****************************
+          // Making an asynchronous call
+          //****************************
+          if(http_method === 'GET') {
+          xhr.send(null);
+          }
+          if(http_method === 'POST') {
+          // TO BE ADDED: you must specify the value of the 'Content-type' header — you must inform the server that the body content contains data of the "application/x-www-form-urlencoded" type
+          // xhr.send(null); // TO BE MODIFIED
+          xhr.send(`name=${encodeURIComponent(name)}`);
+          }
+          }
+
+          /**************************************************************************************/
+          /* Function that performs (asynchronous) query to the web server  usingFetch API      */
+          /**************************************************************************************/
+          /* http_method ∈ ["GET", "POST"]                                                      */
+          /* response_type ∈ ["text", "json", "xml"]                                            */
+          /* name - Contents of the form's text box - data that needs to be sent asynchronously */
+          /**************************************************************************************/
+          function requestFetchAPI(http_method, response_type, name, show_alert=false) {
+          let accept = '*/*';
+
+          switch(response_type){
+          case 'json':
+          accept = 'application/json';
+          break;
+          case 'xml':
+          accept = 'application/xml';
+          break;
+          }
+          //--------------------------------------------------------------------------
+          // Configuration and execution of the (asynchronous) query to the web server
+          //--------------------------------------------------------------------------
+          ((http_method) => {
+          if(http_method === 'GET')
+          return fetch(`http://localhost:8000/submit?name=${encodeURIComponent(name)}`, { // TO BE MODIFIED
+          method: 'GET',
+          credentials: "include", // Do not modify or remove
+          headers: {
+          //****************************************************************************************
+          // What is the acceptable data type—the server part should return data of the given type
+          //****************************************************************************************
+          Accept: accept
+          }
+          });
+          if(http_method === 'POST')
+          return fetch('http://localhost:8000/submit', {
+          method: 'POST',
+          credentials: "include", // Do not modify or remove
+          // TO BE ADDED - you need to determine the content of the body
+          body: `name=${encodeURIComponent(name)}`,
+          headers: {
+          // TO BE ADDED: you must specify the value of the 'Content-type' header — you must inform the server that the body content contains data of the "application/x-www-form-urlencoded" type
+          'Content-type': 'application/x-www-form-urlencoded',
+          //****************************************************************************************
+          // What is the acceptable data type—the server part should return data of the given type
+          //****************************************************************************************
+          Accept: accept
+          }
+          });
+
+          })(http_method) // a promise is returned
+          .then(function (response) { // if the promise is fulfilled
+          if (!response.ok)
+          throw Error(response.statusText);
+
+          console.group('Fetch API');
+          console.log(`HTTP method ⟶\t\t${http_method}\nResponse type ⟶\t${response_type}\nInput data ⟶\t\t${name}`);
+          let result;
+
+          if (!response.headers.get('content-type')?.includes('application/json')) {
+          // If the received data is plain text or an XML document
+          result = response.text();
+          }
+          else {
+          //If the received data is a JSON document
+          result = response.json();
+          }
+          console.log(result);
+          console.groupEnd();
+          if(show_alert){
+          // window.alert(result);
+          response.text().then(function(text) {
+          // window.alert(text);
+          displayData(text);
+          });
+          }
+
+          else {
+          results.set(`fetch ${http_method} ${response_type}`, result);
+          dispatchEvent(received);
+          }
+          })
+          .catch(function (error) { // if the promise is rejected
+          window.alert(error);
+          });
+          }

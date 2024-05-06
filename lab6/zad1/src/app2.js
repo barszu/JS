@@ -5,9 +5,15 @@
 import express from 'express';
 import morgan from 'morgan';
 import { encodeXML } from 'entities';
+import cors from 'cors';
 
 const app1 = express();
 const app2 = express();
+
+app2.use(cors({
+  origin: 'http://localhost:8001',
+  credentials: true
+})) //middleware potrzebny
 
 app1.set('view engine', 'pug');
 app1.locals.pretty = app1.get('env') === 'development';
