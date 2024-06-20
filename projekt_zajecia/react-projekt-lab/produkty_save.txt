@@ -1,0 +1,60 @@
+
+<main class="container main-container">
+  <div class="row d-flex flex-row">
+    <div class="card m-10 col-md-4 spinner">
+      <img
+        src="https://www.fiat.pl/content/dam/fiat/com/my23/tipo/colorizer/tipo-hb/paprika-orange/Tipo-HB-colorizer-Paprika-Orange-desktop-680x430.png"
+        class="card-img-top rounded mx-auto d-block"
+        alt="car image"
+      />
+      <div class="card-body ">
+        <h2 class="card-titl h4">fiat tipo</h2>
+        <ul class="h5">
+          <li>silnik benzynowy 999cm^3</li>
+          <li>skrzynia biegów manualna</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card col-md-3 mb-5 mx-md-4 spinner">
+      <img
+        src="https://www.fiat.pl/content/dam/fiat/com/my23/500-500c/white-label/500/500-PDF-figurino-mobile-288x225.png"
+        alt=""
+        class="card-img-top rounded mx-auto d-block">
+      <div class="">
+        <h2 class="card-title h4">fiat 500</h2>
+        <ul>
+          <li>silnik elektryczny</li>
+          <li>zasięg 400km</li>
+        </ul>
+      </div>
+    </div>
+
+
+  </div>
+  <div class="row d-flex flex-row">
+    <div class="card col-md-3 mb-5 mx-4 spinner" style="width: 30rem">
+      <img
+        src="https://etnacar.pl/media/images/product/przyczepy_oraz_lawety/thumbs/6_1_przyczepa_dwuosiowa_bez_plandeki_z_hamulcem-960x640.jpg"
+        class="card-img-top rounded mx-auto d-block"
+        alt="car image"
+      />
+      <div class="">
+        <h2 class="card-title h4">Przyczepa samochdowa bez plandeki</h2>
+      </div>
+    </div>
+
+    <div class="card col-md-3 mb-5 spinner">
+      <img
+        src="https://a.allegroimg.com/original/11e5c3/8c9e205a43b8b9af888e47e1be26/Przyczepka-Samochodowa-Z-PLANDEKA-I-STELAZEM-RSH-Typ-burtowa-plandeka"
+        class="card-img-top rounded mx-auto d-block"
+        width="200px"
+        alt="car image"
+
+      />
+      <div class="">
+        <h2 class="h5">Przyczepka samochdowa z plandeką</h2>
+      </div>
+    </div>
+  </div>
+</main>

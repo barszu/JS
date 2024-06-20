@@ -1,0 +1,26 @@
+{
+  "name": "zad1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app1.js",
+  "type": "module",
+  "scripts": {
+    "test": "npm jest",
+    "dev1": "node --watch src/app1",
+    "dev2": "node --watch src/app2",
+    "dev3": "node --watch src/app3"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "supertest": "^6.3.4"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "jest": "^29.7.0",
+    "mongodb": "^6.5.0",
+    "mongoose": "^8.3.2",
+    "morgan": "^1.10.0",
+    "pug": "^3.0.2"
+  }
+}

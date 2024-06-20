@@ -1,0 +1,87 @@
+.body-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.azure {
+  background-color: azure;
+}
+
+body {
+  font-size: 1.6vw; /* Rozmiar czcionki dla body */
+}
+
+header h1 {
+  font-size: 4vw; /* Rozmiar czcionki dla nagłówka */
+}
+
+nav ul li a {
+  font-size: 2vw; /* Rozmiar czcionki dla elementów menu nawigacyjnego */
+}
+
+aside h1 {
+  font-size: 3vw; /* Rozmiar czcionki dla tytułu panelu bocznego */
+}
+
+main h1 {
+  font-size: 3vw; /* Rozmiar czcionki dla tytułu treści strony */
+}
+
+footer a {
+  font-size: 2vw; /* Rozmiar czcionki dla linku w stopce */
+}
+
+.frame-style {
+  border-color: black;
+  border-style: solid;
+  border-width: 2px;
+  padding: 10px;
+  box-shadow: 0px 0px 10px #a8a8a8;
+  margin: 10px;
+}
+
+:root {
+  --text-color-initial: #000; /* Kolor początkowy */
+  --text-color-final: #ff0000; /* Kolor końcowy */
+}
+
+@keyframes changeColor {
+  0% {
+    color: var(--text-color-initial);
+  }
+  50% {
+    color: var(--text-color-final);
+  }
+  100% {
+    color: var(--text-color-initial);
+  }
+}
+
+.animation-text-color {
+  animation: changeColor 3s infinite; /* Trwanie animacji: 3 sekundy, powtarzalne */
+}
+
+@media only screen and (width > 800px) {
+  header {
+    width: auto;
+  }
+
+  nav {
+    width: fit-content;
+  }
+
+  aside {
+    width: 44vw;
+    transform: translateX(50vw) translateY(-12vh);
+  }
+
+  main {
+    width: 40%;
+    transform: translateY(-25vh);
+  }
+
+  footer {
+    width: auto;
+    transform: translateY(-25vh);
+  }
+}

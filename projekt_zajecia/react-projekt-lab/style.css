@@ -1,0 +1,12 @@
+@keyframes spinner-keyframes {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  animation: spinner-border 3s linear infinite;
+  animation-play-state: paused;
+}
+
+.spinner:hover {
+  animation-play-state: running;
+}
